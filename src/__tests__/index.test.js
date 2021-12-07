@@ -51,6 +51,23 @@ describe("Testing the app endpoints", () => {
     expect(response.body.length).toBeGreaterThan(0);
   });
 
+  /*   When retrieving the /products/:id endpoint:
+expect requests to be 404 with a non-existing id
+expect requests to return the correct product with a valid id */
+
+  it("when retrieving the /products/:id endpoint with valid id", async () => {
+    const product = await request.get("/products");
+    const product_id = product.body[0]._id.toString();
+    console.log(product_id);
+    const response = await request.get(`/products/${product_id}`);
+    expect(response.status).toBe(200);
+  });
+
+  it("when retrieving the /products/:id endpoint with a non-existing id", async () => {
+    const response = await request.get("/products/600");
+    expect(response.status).toBe(404);
+  });
+
   afterAll((done) => {
     mongoose.connection
       .dropDatabase()
