@@ -68,6 +68,28 @@ expect requests to return the correct product with a valid id */
     expect(response.status).toBe(404);
   });
 
+  /*   When deleting the /products/:id endpoint:
+expect successful 204 response code
+expect 404 with a non-existing id */
+  it("when delete the /products/:id endpoint with valid id", async () => {
+    const product = await request.get("/products");
+    const product_id = product.body[0]._id.toString();
+    console.log(product_id);
+    const response = await request.delete(`/products/${product_id}`);
+    expect(response.status).toBe(204);
+  });
+
+  it("when deleting the /products/:id endpoint with a non-existing id", async () => {
+    const response = await request.get("/products/600");
+    expect(response.status).toBe(404);
+  });
+
+  /*   When updating a /product/:id endpoint with new data:
+expect requests to be accepted.
+expect 404 with a non-existing id
+Expect the response.body.name to be changed
+Expect the typeof name in response.body to be “string” */
+
   afterAll((done) => {
     mongoose.connection
       .dropDatabase()

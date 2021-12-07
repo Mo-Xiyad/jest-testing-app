@@ -26,6 +26,20 @@ productsRouter
       res.status(404).send();
       console.error(error);
     }
+  })
+  .delete("/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const products = await ProductModel.findByIdAndDelete(id);
+      if (products) {
+        res.status(204).send();
+      } else {
+        res.status(404).send();
+      }
+    } catch (error) {
+      res.status(404).send();
+      console.error(error);
+    }
   });
 
 export default productsRouter;
