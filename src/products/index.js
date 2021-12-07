@@ -18,13 +18,35 @@ productsRouter
       const id = req.params.id;
       const products = await ProductModel.findById(id);
       if (products) {
-        res.send(products);
+        res.status(200).send(products);
       } else {
         res.status(404).send();
       }
     } catch (error) {
       res.status(404).send();
       console.error(error);
+    }
+  })
+  .put("/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      if (id) {
+        const updatedPost = await ProductModel.findByIdAndUpdate(id, req.body, {
+          new: true,
+        });
+        if (updatedPost) {
+          res.status(202).send(updatedPost);
+        } else {
+          //     createHttpError(304, `Post with id ${id} could not be modified`)
+          res.status(304).send();
+        }
+      } else {
+        res.status(404).send();
+      }
+    } catch (error) {
+      res.status(404).send();
+      console.log(error);
+      next(error);
     }
   })
   .delete("/:id", async (req, res) => {

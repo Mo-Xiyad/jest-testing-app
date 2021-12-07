@@ -68,6 +68,34 @@ expect requests to return the correct product with a valid id */
     expect(response.status).toBe(404);
   });
 
+  /*   When updating a /product/:id endpoint with new data:
+expect requests to be accepted.
+expect 404 with a non-existing id
+Expect the response.body.name to be changed
+Expect the typeof name in response.body to be “string” */
+  const editProduct = {
+    name: "Test Product updated",
+    price: 250,
+  };
+
+  it("When updating a /product/:id endpoint with new data", async () => {
+    const product = await request.get("/products");
+    const product_id = product.body[0]._id.toString();
+
+    const response = await request
+      .put(`/products/${product_id}`)
+      .send(editProduct);
+
+    expect(response.status).toBe(202);
+    expect(response.body.name).toBeDefined();
+    expect(response.body.price).toBeDefined();
+  });
+
+  it("When updating a /product/:id endpoint with new data", async () => {
+    const response = await request.get("/products/600");
+    expect(response.status).toBe(404);
+  });
+
   /*   When deleting the /products/:id endpoint:
 expect successful 204 response code
 expect 404 with a non-existing id */
@@ -83,13 +111,6 @@ expect 404 with a non-existing id */
     const response = await request.get("/products/600");
     expect(response.status).toBe(404);
   });
-
-  /*   When updating a /product/:id endpoint with new data:
-expect requests to be accepted.
-expect 404 with a non-existing id
-Expect the response.body.name to be changed
-Expect the typeof name in response.body to be “string” */
-
   afterAll((done) => {
     mongoose.connection
       .dropDatabase()
